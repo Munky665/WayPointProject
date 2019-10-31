@@ -1,0 +1,11 @@
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\bin\Debug\2DWaypoint.exe.config
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\bin\Debug\2DWaypoint.exe
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\bin\Debug\2DWaypoint.pdb
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csprojAssemblyReference.cache
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.MDIParent.resources
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.Properties.Resources.resources
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csproj.GenerateResource.cache
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csproj.CoreCompileInputs.cache
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.exe
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.pdb
+D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.Editor.resources
