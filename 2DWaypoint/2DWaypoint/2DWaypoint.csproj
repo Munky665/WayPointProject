@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawDots.cs" />
     <Compile Include="Editor.cs">
       <SubType>Form</SubType>
     </Compile>

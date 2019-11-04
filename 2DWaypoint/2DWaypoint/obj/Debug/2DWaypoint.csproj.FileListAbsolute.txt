@@ -9,3 +9,14 @@ D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csproj.Co
 D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.exe
 D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.pdb
 D:\Aie Classes\CSharp intro\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.Editor.resources
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\bin\Debug\2DWaypoint.exe.config
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\bin\Debug\2DWaypoint.exe
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\bin\Debug\2DWaypoint.pdb
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csprojAssemblyReference.cache
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.Editor.resources
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.MDIParent.resources
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.Properties.Resources.resources
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csproj.GenerateResource.cache
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csproj.CoreCompileInputs.cache
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.exe
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.pdb
