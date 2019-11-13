@@ -23,21 +23,32 @@ namespace _2DWaypoint
 
         private void ShowNewForm(object sender, EventArgs e)
         {
-            Form childForm = new Editor();
-            childForm.MdiParent = this;
-            childForm.Text = "Editor Window";
-            childForm.Show();
+            if (ActiveMdiChild == null)
+            {
+                Form childForm = new Editor();
+                childForm.Name = "Editor";
+                childForm.MdiParent = this;
+                childForm.Text = "Editor Window";
+                childForm.Show();
+            }
+            else if (ActiveMdiChild != null && ActiveMdiChild.Name != "Alert")
+            {
+                Form PopUp = new Alert();
+                PopUp.MdiParent = this;
+                PopUp.WindowState = FormWindowState.Maximized;
+                PopUp.Show();
+            }
         }
 
         private void OpenFile(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
-            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                string FileName = openFileDialog.FileName;
-            }
+            //OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            //openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            //if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            //{
+            //    string FileName = openFileDialog.FileName;
+            //}
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)

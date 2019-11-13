@@ -20,3 +20,4 @@ D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.cspr
 D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.csproj.CoreCompileInputs.cache
 D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.exe
 D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\2DWaypoint.pdb
+D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Debug\_2DWaypoint.Alert.resources

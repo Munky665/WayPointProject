@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBoxWaypoints = new System.Windows.Forms.TextBox();
-            this.textBoxCoordinates = new System.Windows.Forms.TextBox();
             this.labelCoordinates = new System.Windows.Forms.Label();
             this.labelWaypoints = new System.Windows.Forms.Label();
             this.labelMap = new System.Windows.Forms.Label();
@@ -46,34 +44,18 @@
             this.WaypointACombo = new System.Windows.Forms.ComboBox();
             this.WaypointBCombo = new System.Windows.Forms.ComboBox();
             this.WeightNumText = new System.Windows.Forms.TextBox();
-            this.WeightTextBox = new System.Windows.Forms.TextBox();
             this.WeightedWaypointLabel = new System.Windows.Forms.Label();
+            this.CoordinatesLabel = new System.Windows.Forms.Label();
+            this.WaypointListBox = new System.Windows.Forms.ListBox();
+            this.WeightedListBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
-            // 
-            // textBoxWaypoints
-            // 
-            this.textBoxWaypoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxWaypoints.Location = new System.Drawing.Point(12, 26);
-            this.textBoxWaypoints.Multiline = true;
-            this.textBoxWaypoints.Name = "textBoxWaypoints";
-            this.textBoxWaypoints.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxWaypoints.Size = new System.Drawing.Size(195, 245);
-            this.textBoxWaypoints.TabIndex = 1;
-            // 
-            // textBoxCoordinates
-            // 
-            this.textBoxCoordinates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxCoordinates.Location = new System.Drawing.Point(12, 649);
-            this.textBoxCoordinates.Name = "textBoxCoordinates";
-            this.textBoxCoordinates.Size = new System.Drawing.Size(133, 20);
-            this.textBoxCoordinates.TabIndex = 2;
             // 
             // labelCoordinates
             // 
-            this.labelCoordinates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelCoordinates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCoordinates.AutoSize = true;
-            this.labelCoordinates.Location = new System.Drawing.Point(12, 633);
+            this.labelCoordinates.ForeColor = System.Drawing.Color.Black;
+            this.labelCoordinates.Location = new System.Drawing.Point(1272, 6);
             this.labelCoordinates.Name = "labelCoordinates";
             this.labelCoordinates.Size = new System.Drawing.Size(66, 13);
             this.labelCoordinates.TabIndex = 3;
@@ -84,7 +66,7 @@
             this.labelWaypoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.labelWaypoints.AutoSize = true;
-            this.labelWaypoints.Location = new System.Drawing.Point(12, 7);
+            this.labelWaypoints.Location = new System.Drawing.Point(12, 19);
             this.labelWaypoints.Name = "labelWaypoints";
             this.labelWaypoints.Size = new System.Drawing.Size(57, 13);
             this.labelWaypoints.TabIndex = 4;
@@ -92,10 +74,8 @@
             // 
             // labelMap
             // 
-            this.labelMap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMap.AutoSize = true;
-            this.labelMap.Location = new System.Drawing.Point(213, 7);
+            this.labelMap.Location = new System.Drawing.Point(213, 19);
             this.labelMap.Name = "labelMap";
             this.labelMap.Size = new System.Drawing.Size(28, 13);
             this.labelMap.TabIndex = 5;
@@ -106,20 +86,20 @@
             this.ButtonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.ButtonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(906, 652);
+            this.ButtonSave.Location = new System.Drawing.Point(1268, 659);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
             this.ButtonSave.TabIndex = 6;
             this.ButtonSave.Text = "Export";
             this.ButtonSave.UseVisualStyleBackColor = true;
-            this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
+            this.ButtonSave.Click += new System.EventHandler(this.ButtonExport_Click);
             // 
             // ClearWaypoints
             // 
             this.ClearWaypoints.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ClearWaypoints.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.ClearWaypoints.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearWaypoints.Location = new System.Drawing.Point(744, 652);
+            this.ClearWaypoints.Location = new System.Drawing.Point(1106, 659);
             this.ClearWaypoints.Name = "ClearWaypoints";
             this.ClearWaypoints.Size = new System.Drawing.Size(75, 23);
             this.ClearWaypoints.TabIndex = 7;
@@ -132,7 +112,7 @@
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonImport.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonImport.Location = new System.Drawing.Point(825, 652);
+            this.buttonImport.Location = new System.Drawing.Point(1187, 659);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(75, 23);
             this.buttonImport.TabIndex = 8;
@@ -146,24 +126,25 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.panel1.Location = new System.Drawing.Point(216, 26);
+            this.panel1.Location = new System.Drawing.Point(216, 35);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(765, 600);
+            this.panel1.Size = new System.Drawing.Size(1127, 598);
             this.panel1.TabIndex = 9;
             this.panel1.Click += new System.EventHandler(this.pictureBoxMap_Click);
             this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragDrop);
             this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragEnter);
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Update_Move);
             // 
             // WaypointALabel
             // 
+            this.WaypointALabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WaypointALabel.AutoSize = true;
-            this.WaypointALabel.Location = new System.Drawing.Point(219, 628);
+            this.WaypointALabel.Location = new System.Drawing.Point(8, 641);
             this.WaypointALabel.Name = "WaypointALabel";
             this.WaypointALabel.Size = new System.Drawing.Size(74, 13);
             this.WaypointALabel.TabIndex = 14;
@@ -171,8 +152,9 @@
             // 
             // WaypointBLabel
             // 
+            this.WaypointBLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WaypointBLabel.AutoSize = true;
-            this.WaypointBLabel.Location = new System.Drawing.Point(356, 628);
+            this.WaypointBLabel.Location = new System.Drawing.Point(145, 641);
             this.WaypointBLabel.Name = "WaypointBLabel";
             this.WaypointBLabel.Size = new System.Drawing.Size(92, 13);
             this.WaypointBLabel.TabIndex = 15;
@@ -180,8 +162,9 @@
             // 
             // WeightText
             // 
+            this.WeightText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WeightText.AutoSize = true;
-            this.WeightText.Location = new System.Drawing.Point(495, 628);
+            this.WeightText.Location = new System.Drawing.Point(284, 641);
             this.WeightText.Name = "WeightText";
             this.WeightText.Size = new System.Drawing.Size(41, 13);
             this.WeightText.TabIndex = 16;
@@ -189,57 +172,81 @@
             // 
             // WaypointACombo
             // 
+            this.WaypointACombo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WaypointACombo.FormattingEnabled = true;
-            this.WaypointACombo.Location = new System.Drawing.Point(222, 648);
+            this.WaypointACombo.Location = new System.Drawing.Point(11, 661);
             this.WaypointACombo.Name = "WaypointACombo";
             this.WaypointACombo.Size = new System.Drawing.Size(121, 21);
             this.WaypointACombo.TabIndex = 17;
             // 
             // WaypointBCombo
             // 
+            this.WaypointBCombo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WaypointBCombo.FormattingEnabled = true;
-            this.WaypointBCombo.Location = new System.Drawing.Point(359, 648);
+            this.WaypointBCombo.Location = new System.Drawing.Point(148, 661);
             this.WaypointBCombo.Name = "WaypointBCombo";
             this.WaypointBCombo.Size = new System.Drawing.Size(121, 21);
             this.WaypointBCombo.TabIndex = 18;
             // 
             // WeightNumText
             // 
-            this.WeightNumText.Location = new System.Drawing.Point(498, 648);
+            this.WeightNumText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.WeightNumText.Location = new System.Drawing.Point(287, 661);
             this.WeightNumText.Name = "WeightNumText";
             this.WeightNumText.Size = new System.Drawing.Size(100, 20);
             this.WeightNumText.TabIndex = 19;
             this.WeightNumText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EnterPressed);
             // 
-            // WeightTextBox
-            // 
-            this.WeightTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.WeightTextBox.Location = new System.Drawing.Point(12, 303);
-            this.WeightTextBox.Multiline = true;
-            this.WeightTextBox.Name = "WeightTextBox";
-            this.WeightTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.WeightTextBox.Size = new System.Drawing.Size(195, 326);
-            this.WeightTextBox.TabIndex = 20;
-            // 
             // WeightedWaypointLabel
             // 
-            this.WeightedWaypointLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.WeightedWaypointLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WeightedWaypointLabel.AutoSize = true;
-            this.WeightedWaypointLabel.Location = new System.Drawing.Point(12, 284);
+            this.WeightedWaypointLabel.Location = new System.Drawing.Point(12, 291);
             this.WeightedWaypointLabel.Name = "WeightedWaypointLabel";
             this.WeightedWaypointLabel.Size = new System.Drawing.Size(106, 13);
             this.WeightedWaypointLabel.TabIndex = 21;
             this.WeightedWaypointLabel.Text = "Weighted Waypoints";
             // 
+            // CoordinatesLabel
+            // 
+            this.CoordinatesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CoordinatesLabel.AutoSize = true;
+            this.CoordinatesLabel.ForeColor = System.Drawing.Color.Black;
+            this.CoordinatesLabel.Location = new System.Drawing.Point(1265, 19);
+            this.CoordinatesLabel.Name = "CoordinatesLabel";
+            this.CoordinatesLabel.Size = new System.Drawing.Size(71, 13);
+            this.CoordinatesLabel.TabIndex = 4;
+            this.CoordinatesLabel.Text = "{ X= 0 , Y= 0}";
+            // 
+            // WaypointListBox
+            // 
+            this.WaypointListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.WaypointListBox.FormattingEnabled = true;
+            this.WaypointListBox.Location = new System.Drawing.Point(11, 35);
+            this.WaypointListBox.Name = "WaypointListBox";
+            this.WaypointListBox.Size = new System.Drawing.Size(196, 251);
+            this.WaypointListBox.TabIndex = 22;
+            // 
+            // WeightedListBox
+            // 
+            this.WeightedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.WeightedListBox.FormattingEnabled = true;
+            this.WeightedListBox.Location = new System.Drawing.Point(11, 310);
+            this.WeightedListBox.Name = "WeightedListBox";
+            this.WeightedListBox.Size = new System.Drawing.Size(196, 316);
+            this.WeightedListBox.TabIndex = 23;
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(993, 681);
+            this.ClientSize = new System.Drawing.Size(1355, 688);
+            this.Controls.Add(this.WeightedListBox);
+            this.Controls.Add(this.WaypointListBox);
+            this.Controls.Add(this.CoordinatesLabel);
+            this.Controls.Add(this.labelCoordinates);
             this.Controls.Add(this.WeightedWaypointLabel);
-            this.Controls.Add(this.WeightTextBox);
             this.Controls.Add(this.WeightNumText);
             this.Controls.Add(this.WaypointBCombo);
             this.Controls.Add(this.WaypointACombo);
@@ -252,10 +259,9 @@
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.labelMap);
             this.Controls.Add(this.labelWaypoints);
-            this.Controls.Add(this.labelCoordinates);
-            this.Controls.Add(this.textBoxCoordinates);
-            this.Controls.Add(this.textBoxWaypoints);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Editor";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Editor";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -263,8 +269,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.TextBox textBoxWaypoints;
-        private System.Windows.Forms.TextBox textBoxCoordinates;
         private System.Windows.Forms.Label labelCoordinates;
         private System.Windows.Forms.Label labelWaypoints;
         private System.Windows.Forms.Label labelMap;
@@ -280,7 +284,9 @@
         private System.Windows.Forms.ComboBox WaypointACombo;
         private System.Windows.Forms.ComboBox WaypointBCombo;
         private System.Windows.Forms.TextBox WeightNumText;
-        private System.Windows.Forms.TextBox WeightTextBox;
         private System.Windows.Forms.Label WeightedWaypointLabel;
+        private System.Windows.Forms.Label CoordinatesLabel;
+        private System.Windows.Forms.ListBox WaypointListBox;
+        private System.Windows.Forms.ListBox WeightedListBox;
     }
 }

@@ -1,15 +1,5 @@
-{ X=-76,Y=-67 }, Waypoint A
-{ X=-232,Y=34 }, Waypoint B
-{ X=113,Y=152 }, Waypoint C
-{ X=95,Y=-65 }, Waypoint D
-{ X=-164,Y=48 }, Waypoint E
-{ X=-68,Y=-216 }, Waypoint F
-{ X=-157,Y=-5 }, Waypoint G
-{ X=99,Y=20 }, Waypoint H
-{ X=108,Y=-173 }, Waypoint I
-{ X=199,Y=78 }, Waypoint J
-{ X=-137,Y=171 }, Waypoint K
-{ X=-172,Y=-135 }, Waypoint L
-{ X=-172,Y=-133 }, Waypoint M
-{ X=-215,Y=119 }, Waypoint N
-Waypoint A, Waypoint H, Weight 20
+{ X= 12 ,Y= 2 }, Waypoint A
+{ X= -197 ,Y= 120 }, Waypoint B
+{ X= -230 ,Y= -189 }, Waypoint C
+{ X= 175 ,Y= -190 }, Waypoint D
+{ X= 234 ,Y= 110 }, Waypoint E

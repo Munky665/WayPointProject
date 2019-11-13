@@ -16,37 +16,62 @@ namespace _2DWaypoint
 {
     public partial class Editor : Form
     {
-        char waypoint = 'A';
-        string mousePos;
-        float XaxisF = 0;
-        float YaxisF = 0;
-        Point DrawEllipsAt;
-        bool DrawEllipse = false;
-        MouseEventArgs me;
+        #region startup
+        char m_waypoint = 'A';
+        string m_mousePos;
+        public static int s_comboBox = 0;
+        float m_XaxisF = 0;
+        float m_YaxisF = 0;
+        int XButtonBuffer = -8;
+        int YButtonBuffer = -13;
+        Point m_DrawEllipsAt;
+        MouseEventArgs m_me;
+        List<WayPointButton> m_waypointStorage = new List<WayPointButton>();
+        List<string> m_vectors = new List<string>();
 
-        List<string> vectors = new List<string>();
         public Editor()
         {
+         
             InitializeComponent();
             panel1.AllowDrop = true;
-            MDIParent.saveFileEvent += ButtonSave_Click;
+            MDIParent.saveFileEvent += ButtonExport_Click;
+            Alert.exportFileEvent += ButtonExport_Click;
+            this.WindowState = FormWindowState.Maximized;
+            this.ControlBox = false;
         }
+        #endregion
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        #region Import/Export
+        //exports data to csv file format.
+        private void ButtonExport_Click(object sender, EventArgs e)
         {
             Stream myStream;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "txt files (*.txt)| *.txt|All Files(*,*)|*.*";
+            saveFileDialog.Filter = "csv files (*.csv)| *.csv|All Files(*,*)|*.*";
             saveFileDialog.FilterIndex = 2;
             saveFileDialog.RestoreDirectory = true;
 
-            if(saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if((myStream = saveFileDialog.OpenFile()) != null)
+                if ((myStream = saveFileDialog.OpenFile()) != null)
                 {
-                    //output file contents here
-                    var bytes = Encoding.ASCII.GetBytes(textBoxWaypoints.Text);
-                    var bytesW = Encoding.ASCII.GetBytes(WeightTextBox.Text);
+                    //temp string to hold item values
+                    string temp = "";
+                    //write item values to string
+                    foreach(string s in WaypointListBox.Items)
+                    {
+                        temp += s;
+                    }
+                    //add string to bytes var
+                    var bytes = Encoding.ASCII.GetBytes(temp);
+                    //clear temp value
+                    temp = "";
+                    foreach(string s in WeightedListBox.Items)
+                    {
+                        temp += s;
+                    }
+                    var bytesW = Encoding.ASCII.GetBytes(temp);
+
                     myStream.Write(bytes, 0, bytes.Length);
                     myStream.Write(bytesW, 0, bytesW.Length);
                     myStream.Close();
@@ -54,81 +79,11 @@ namespace _2DWaypoint
             }
 
         }
-
-        private void pictureBoxMap_Click(object sender, EventArgs e)
-        {
-            if (e is MouseEventArgs)
-            {
-                if (waypoint == '[')
-                {
-                    waypoint += 'A';
-                }
-                //store vector in array for use later
-                vectors.Add(mousePos);
-
-                //adds waypoint coordinates to text box
-                textBoxWaypoints.Text += vectors[vectors.Count - 1]
-                    + ", "
-                    + "Waypoint "
-                    + waypoint.ToString()
-                    + Environment.NewLine;
-                //adds waypoint letters to combo boxes
-                WaypointACombo.Items.Add("Waypoint "
-                    + waypoint.ToString());
-                WaypointBCombo.Items.Add("Waypoint "
-                    + waypoint.ToString());
-                //increment waypoint letter
-                waypoint++;
-
-            }
-            this.DrawEllipsAt = new Point(me.Location.X, me.Location.Y);
-            this.DrawEllipse = true;
-            panel1.Refresh();
-            this.Invalidate();
-        }
-
-        private void Update_Move(object sender, MouseEventArgs e)
-        {
-            if (e is MouseEventArgs)
-            {
-                //adjust panel coordinates so 0,0 is in the middle
-                 me = e as MouseEventArgs;
-
-                string Xaxis = (me.Location.X - panel1.Width / 2).ToString();
-                string Yaxis = (me.Location.Y - panel1.Height / 2).ToString();
-                //label the axis in a string
-                mousePos = "{ X=" + Xaxis + ",Y=" + Yaxis + " }";
-                textBoxCoordinates.Text = mousePos;
-
-                XaxisF = me.Location.X - (panel1.Width / 2);
-                YaxisF = me.Location.Y - (panel1.Height / 2);
-
-
-
-
-
-            }
-        }
-
-        private void ClearWaypoints_Click(object sender, EventArgs e)
-        {
-            if(e is MouseEventArgs)
-            {
-                MouseEventArgs me = e as MouseEventArgs;
-                textBoxWaypoints.Clear();
-                WaypointACombo.Items.Clear();
-                WaypointACombo.Text = "";
-                WaypointBCombo.Items.Clear();
-                WaypointBCombo.Text = "";
-                WeightTextBox.Clear();
-
-                vectors.Clear();
-            }
-        }
-
+        //import text/csv file
         private void buttonImport_Click(object sender, EventArgs e)
         {
             Stream myStream;
+            ClearAll();
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
                 Filter = "txt files (*.txt)| *.txt|All Files(*,*)|*.*",
@@ -141,20 +96,67 @@ namespace _2DWaypoint
                 {
                     using (StreamReader reader = new StreamReader(myStream))
                     {
-                        char waypointLetter = 'A';
+                        //holds x position saved in a line
+                        int posX = 0;
+                        //holds y position save in a line
+                        int posY = 0;
+                        // holds the number found in the line this pass
+                        int num = 0;
+                        //keeps track of the number of passes
+                        int pass = 0;
                         while (!reader.EndOfStream)
                         {
+                            //check read line to string
                             string text = reader.ReadLine();
+                            //check if the line starts with {
                             if (text.StartsWith("{"))
                             {
-                                textBoxWaypoints.Text += text + Environment.NewLine;
-                                WaypointACombo.Items.Add("Waypoint " + waypointLetter);
-                                WaypointACombo.Items.Add("Waypoint " + waypointLetter);
-                                waypointLetter++;
+                                //copy Whole line to textbox
+                                WaypointListBox.Items.Add(text);
+                                //add waypoint to combo box's
+                                WaypointACombo.Items.Add("Waypoint " + m_waypoint);
+                                WaypointBCombo.Items.Add("Waypoint " + m_waypoint);
+                                //add each word between spaces in line to array
+                                string[] numbers = text.Split();
+                                //check for numbers
+                                foreach (string value in numbers)
+                                {
+                                    //if theres a number in value store it in num
+                                    if (int.TryParse(value, out num))
+                                    {
+                                        //check if first pass, then save num to pos x
+                                        if (pass == 0)
+                                        {
+                                            posX = num;
+                                            pass++;
+                                        }
+                                        //save num to pos y
+                                        else
+                                        {
+                                            posY = num;
+                                            pass--;
+                                        }
+                                    }
+                                }
+                                //create buttons in positions given by file
+                                WayPointButton button = new WayPointButton("Waypoint" + m_waypoint,
+                                                                            new Point(posX + (panel1.Width / 2) + XButtonBuffer, posY + (panel1.Height / 2) + YButtonBuffer),
+                                                                            panel1, WaypointACombo, WaypointBCombo);
+                                //set mouse click event to button
+                                button.SetRadioButtonFunction().MouseClick += button.RadioButtonClicked;
+                                //reset variables
+                                posX = 0;
+                                posY = 0;
+                                //add waypoints to Waypoint list.
+                                m_waypointStorage.Add(button);
+                                panel1.Update();
+                                m_waypoint++;
+
                             }
                             else
                             {
-                                WeightTextBox.Text += text + Environment.NewLine;
+                                //add weighted waypoint information to text box
+                                WeightedListBox.Text += text + Environment.NewLine;
                             }
                         }
                     }
@@ -162,12 +164,76 @@ namespace _2DWaypoint
                 }
             }
         }
+        #endregion
+        #region FormEvents
+        //adds new waypoint when panel is clicked
+        private void pictureBoxMap_Click(object sender, EventArgs e)
+        {
+            if (e is MouseEventArgs)
+            {
+                if (m_waypoint >= 'Z')
+                {
+                    m_waypoint += 'A';
+                }
+                //store vector in array for use later
+                m_vectors.Add(m_mousePos);
+
+                //adds waypoint coordinates to text box
+                WaypointListBox.Items.Add(m_vectors[m_vectors.Count - 1]
+                    + ", "
+                    + "Waypoint "
+                    + m_waypoint.ToString()
+                    + Environment.NewLine);
+                //adds waypoint letters to combo boxes
+                WaypointACombo.Items.Add("Waypoint "
+                    + m_waypoint.ToString());
+                WaypointBCombo.Items.Add("Waypoint "
+                    + m_waypoint.ToString());
+                //add Dot
+                PlaceDot("Waypoint "
+                  + m_waypoint.ToString());
+                //increment waypoint letter
+                m_waypoint++;
+            }
+           
+        }
+        //keeps track of the mouse position when over panel
+        private void Update_Move(object sender, MouseEventArgs e)
+        {
+            
+            if (e is MouseEventArgs)
+            {
+                //adjust panel coordinates so 0,0 is in the middle
+                 m_me = e as MouseEventArgs;
+
+                int Xaxis = (m_me.Location.X - panel1.Width / 2);
+                int Yaxis = (m_me.Location.Y - panel1.Height / 2);
+                //label the axis in a string
+                m_mousePos = "{ X= " + Xaxis + " ,Y= " + Yaxis + " }";
+                CoordinatesLabel.Text = m_mousePos;
+
+                m_XaxisF = m_me.Location.X - (panel1.Width / 2);
+                m_YaxisF = m_me.Location.Y - (panel1.Height / 2);
+
+                m_DrawEllipsAt = new Point(m_me.Location.X + XButtonBuffer, m_me.Location.Y + YButtonBuffer);
+
+            }
+        }
+        //clears all waypoints when clear button clicked
+        private void ClearWaypoints_Click(object sender, EventArgs e)
+        {
+            if(e is MouseEventArgs)
+            {
+                MouseEventArgs me = e as MouseEventArgs;
+                ClearAll();
+            }
+        }
         //allows image to be dragged into the window
         private void ImageImport_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
         }
-
+        //when dropped renders image as background.
         private void ImageImport_DragDrop(object sender, DragEventArgs e)
         {
             //get file information
@@ -185,36 +251,97 @@ namespace _2DWaypoint
                 }
             }
 
-        }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-            if (this.DrawEllipse)
-            {
-                Graphics g = e.Graphics;
-
-                Rectangle rect = new Rectangle(DrawEllipsAt, new Size(0, 0));
-                rect.Inflate(new Size(5, 5));
-
-                Pen myPen = new Pen(Color.Red);
-                g.DrawImage(new Bitmap("WayPointDot.png"), rect);
-                myPen.Dispose();
-
-            }
 
         }
-
+        //adds weighted waypoint edge when enter pressed
         private void EnterPressed(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                WeightTextBox.Text += WaypointACombo.SelectedItem.ToString() + ", "
+                WeightedListBox.Items.Add(WaypointACombo.SelectedItem.ToString() + ", "
                     + WaypointBCombo.SelectedItem.ToString() + ", " + "Weight "
-                    + WeightNumText.Text.ToString()
-                    + Environment.NewLine;
+                    + WeightNumText.Text.ToString());
+
+                WeightNumText.Text = null;
+                WaypointACombo.Text = null;
+                WaypointBCombo.Text = null;
             }
 
         }
+        #endregion
+        #region Clear/PlaceFunctions
+        //clears all text boxes, waypoints and combo boxes
+        private void ClearAll()
+        {
+            m_waypoint = 'A';
+            WaypointListBox.Items.Clear();
+            WaypointACombo.Items.Clear();
+            WaypointACombo.Text = "";
+            WaypointBCombo.Items.Clear();
+            WaypointBCombo.Text = "";
+            WeightedListBox.Items.Clear();
+            panel1.Controls.Clear();
+            m_waypointStorage.Clear();
+            m_vectors.Clear();
+        }
+        //places New Waypoint
+        private void PlaceDot(string name)
+        {
+            WayPointButton waypointDot = new WayPointButton(name, m_DrawEllipsAt, 
+                                                            panel1, WaypointACombo, 
+                                                            WaypointBCombo);
+            waypointDot.SetRadioButtonFunction().MouseClick += waypointDot.RadioButtonClicked;
+            waypointDot.SetRadioButtonFunction().KeyDown += DeleteWaypointInfo;
+            waypointDot.SetRadioButtonFunction().KeyDown += waypointDot.RadioButtonDelete;
+            m_waypointStorage.Add(waypointDot);
+        }
+
+        private void DeleteWaypointInfo(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Delete)
+            {
+                foreach(WayPointButton b in m_waypointStorage)
+                {
+                    if(b.Checked == true)
+                    {
+                        //check if waypoint is in the list box
+                      for(int i = 0; i < WaypointListBox.Items.Count; i++)
+                        {
+                            if(WaypointListBox.Items[i].ToString().Contains(b.Text))
+                            {
+                                WaypointListBox.Items.RemoveAt(i);
+                            }
+                        }
+                      //check if there is a way point connection
+                      for(int i = 0; i < WeightedListBox.Items.Count; i++)
+                        {
+                            if(WeightedListBox.Items[i].ToString().Contains(b.Text))
+                            {
+                                WeightedListBox.Items.RemoveAt(i);
+                            }
+                        }
+                      //check if waypoint is in the combo box
+                      for(int i = 0; i < WaypointACombo.Items.Count; i++)
+                        {
+                            if(WaypointACombo.Items[i].ToString().Contains(b.Text))
+                            {
+                                WaypointACombo.Items.RemoveAt(i);
+                                WaypointBCombo.Items.RemoveAt(i);
+                            }
+                        }
+                      //clear the way point box text of selected
+                      if(WaypointACombo.Text == b.Text)
+                           WaypointACombo.Text = "";
+                      //clear waypoint box text of selected
+                        if (WaypointBCombo.Text == b.Text)
+                           WaypointBCombo.Text = "";
+                    }
+                }
+            }
+        }
+        #endregion
+
+
     }
 }
