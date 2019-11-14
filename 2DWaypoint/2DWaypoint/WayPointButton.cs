@@ -10,18 +10,17 @@ namespace _2DWaypoint
 {
     public partial class WayPointButton : RadioButton
     {
-
+        ToolTip toolTip = new ToolTip();
         ComboBox comboA, comboB;
 
-        public WayPointButton(string name, Point Location, Panel panel, ComboBox combo1, ComboBox combo2)
+        public WayPointButton(string name, Point Location, PictureBox panel, ComboBox combo1, ComboBox combo2)
         {
-            BackColor = Color.Transparent;
             Parent = panel;
             Name = name;
-            Text = name;
             this.Location = Location;
             comboA = combo1;
             comboB = combo2;
+            toolTip.SetToolTip(this, Name);
         }
 
 
@@ -56,5 +55,14 @@ namespace _2DWaypoint
             }
         }
 
+        public void MouseOverButton(object sender, MouseEventArgs e)
+        {
+            if(e.Location == this.Location)
+            {
+
+                toolTip.Active = true;
+            }
+            
+        }
     }
 }

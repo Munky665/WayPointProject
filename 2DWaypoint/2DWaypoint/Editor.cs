@@ -242,8 +242,10 @@ namespace _2DWaypoint
                 try
                 {//set img to image that was dropped in
                     Image img = Image.FromFile(pic);
+                    Graphics g = panel1.CreateGraphics();
                     //set image to background of panel
-                    panel1.BackgroundImage = img;
+                     g.DrawImage(img, new Point ((panel1.Width / 2) - img.Width / 2 , (panel1.Height / 2) - img.Height / 2));
+                    
                 }
                 catch
                 {
@@ -255,13 +257,33 @@ namespace _2DWaypoint
 
         }
         //adds weighted waypoint edge when enter pressed
-        private void EnterPressed(object sender, KeyEventArgs e)
+        private void EnterPressed(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            KeyEventArgs me = e as KeyEventArgs;
+            PaintEventArgs pe = e as PaintEventArgs;
+            if (me.KeyCode == Keys.Enter)
             {
                 WeightedListBox.Items.Add(WaypointACombo.SelectedItem.ToString() + ", "
                     + WaypointBCombo.SelectedItem.ToString() + ", " + "Weight "
                     + WeightNumText.Text.ToString());
+
+                Point start = new Point();
+                Point end = new Point();
+
+                for(int i = 0; i < m_waypointStorage.Count; i++)
+                {
+                    if(m_waypointStorage[i].Name == WaypointACombo.Text)
+                    {
+                        start = m_waypointStorage[i].Location;
+                    }
+                    if(m_waypointStorage[i].Name == WaypointBCombo.Text)
+                    {
+                        end = m_waypointStorage[i].Location;
+                    }
+                }
+
+                Graphics g = panel1.CreateGraphics();
+                g.DrawLine(Pens.White, start, end);
 
                 WeightNumText.Text = null;
                 WaypointACombo.Text = null;
@@ -269,6 +291,16 @@ namespace _2DWaypoint
             }
 
         }
+        private void WeightedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WaypointListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion
         #region Clear/PlaceFunctions
         //clears all text boxes, waypoints and combo boxes
@@ -296,7 +328,7 @@ namespace _2DWaypoint
             waypointDot.SetRadioButtonFunction().KeyDown += waypointDot.RadioButtonDelete;
             m_waypointStorage.Add(waypointDot);
         }
-
+        //deletes waypoint info from list boxes and text boxes
         private void DeleteWaypointInfo(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Delete)
@@ -340,6 +372,7 @@ namespace _2DWaypoint
                 }
             }
         }
+
         #endregion
 
 

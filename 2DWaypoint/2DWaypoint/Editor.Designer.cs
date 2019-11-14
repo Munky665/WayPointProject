@@ -35,7 +35,6 @@
             this.ButtonSave = new System.Windows.Forms.Button();
             this.ClearWaypoints = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.WaypointALabel = new System.Windows.Forms.Label();
@@ -48,6 +47,8 @@
             this.CoordinatesLabel = new System.Windows.Forms.Label();
             this.WaypointListBox = new System.Windows.Forms.ListBox();
             this.WeightedListBox = new System.Windows.Forms.ListBox();
+            this.panel1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelCoordinates
@@ -119,26 +120,6 @@
             this.buttonImport.Text = "Import";
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.AllowDrop = true;
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.AutoScroll = true;
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.panel1.Location = new System.Drawing.Point(216, 35);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1127, 598);
-            this.panel1.TabIndex = 9;
-            this.panel1.Click += new System.EventHandler(this.pictureBoxMap_Click);
-            this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragDrop);
-            this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragEnter);
-            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Update_Move);
             // 
             // WaypointALabel
             // 
@@ -227,6 +208,7 @@
             this.WaypointListBox.Name = "WaypointListBox";
             this.WaypointListBox.Size = new System.Drawing.Size(196, 251);
             this.WaypointListBox.TabIndex = 22;
+            this.WaypointListBox.SelectedIndexChanged += new System.EventHandler(this.WaypointListBox_SelectedIndexChanged);
             // 
             // WeightedListBox
             // 
@@ -236,12 +218,31 @@
             this.WeightedListBox.Name = "WeightedListBox";
             this.WeightedListBox.Size = new System.Drawing.Size(196, 316);
             this.WeightedListBox.TabIndex = 23;
+            this.WeightedListBox.SelectedIndexChanged += new System.EventHandler(this.WeightedListBox_SelectedIndexChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Location = new System.Drawing.Point(216, 45);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1127, 581);
+            this.panel1.TabIndex = 24;
+            this.panel1.TabStop = false;
+            this.panel1.Click += new System.EventHandler(this.pictureBoxMap_Click);
+            this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragDrop);
+            this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragEnter);
+            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Update_Move);
             // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1355, 688);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.WeightedListBox);
             this.Controls.Add(this.WaypointListBox);
             this.Controls.Add(this.CoordinatesLabel);
@@ -253,7 +254,6 @@
             this.Controls.Add(this.WeightText);
             this.Controls.Add(this.WaypointBLabel);
             this.Controls.Add(this.WaypointALabel);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.ClearWaypoints);
             this.Controls.Add(this.ButtonSave);
@@ -263,6 +263,7 @@
             this.Name = "Editor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Editor";
+            ((System.ComponentModel.ISupportInitialize)(this.panel1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,7 +276,6 @@
         private System.Windows.Forms.Button ButtonSave;
         private System.Windows.Forms.Button ClearWaypoints;
         private System.Windows.Forms.Button buttonImport;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolTip toolTip2;
         private System.Windows.Forms.Label WaypointALabel;
@@ -288,5 +288,6 @@
         private System.Windows.Forms.Label CoordinatesLabel;
         private System.Windows.Forms.ListBox WaypointListBox;
         private System.Windows.Forms.ListBox WeightedListBox;
+        private System.Windows.Forms.PictureBox panel1;
     }
 }
