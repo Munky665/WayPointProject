@@ -8,26 +8,35 @@ using System.Drawing;
 
 namespace _2DWaypoint
 {
-    public partial class WayPointButton : RadioButton
+    public partial class WayPointButton
     {
         ToolTip toolTip = new ToolTip();
+        public string Name { get;}
+        public PointF Location { get; }
         ComboBox comboA, comboB;
+        PictureBox panel;
+        public bool Selected { get; }
 
-        public WayPointButton(string name, Point Location, PictureBox panel, ComboBox combo1, ComboBox combo2)
+        public WayPointButton(string name,PictureBox panel, PointF Location, ComboBox combo1, ComboBox combo2)
         {
-            Parent = panel;
+            this.panel = panel;
             Name = name;
             this.Location = Location;
             comboA = combo1;
             comboB = combo2;
-            toolTip.SetToolTip(this, Name);
+            panel.Paint += DrawDot;
         }
 
-
-
-        public RadioButton SetRadioButtonFunction()
+         ~WayPointButton()
         {
-            return this;
+            
+        }
+
+        private void DrawDot(object sender, PaintEventArgs e)
+        {
+            if (e is PaintEventArgs pe)
+                pe.Graphics.FillEllipse(new SolidBrush(Color.Blue), Location.X, Location.Y, 10, 10);
+
         }
 
         public void RadioButtonClicked(object sender, MouseEventArgs e)
@@ -44,25 +53,5 @@ namespace _2DWaypoint
             }
         }
 
-        public void RadioButtonDelete(object sender, KeyEventArgs e)
-        {
-            if (e is KeyEventArgs)
-            {
-                if (this.Checked == true && e.KeyCode == Keys.Delete)
-                {
-                    this.Dispose();
-                }
-            }
-        }
-
-        public void MouseOverButton(object sender, MouseEventArgs e)
-        {
-            if(e.Location == this.Location)
-            {
-
-                toolTip.Active = true;
-            }
-            
-        }
     }
 }
