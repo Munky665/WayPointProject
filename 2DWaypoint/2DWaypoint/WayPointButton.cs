@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Drawing;
 
 namespace _2DWaypoint
 {
-    public partial class WayPointButton
+    public partial class WayPointButton : IGraphic
     {
+        public static float Radius = 5;
         ToolTip toolTip = new ToolTip();
         public string Name { get;}
         public PointF Location { get; }
         ComboBox comboA, comboB;
         PictureBox panel;
-        public bool Selected { get; }
+        public bool Selected { get; set; }
+        Color color = Color.Blue;
 
         public WayPointButton(string name,PictureBox panel, PointF Location, ComboBox combo1, ComboBox combo2)
         {
@@ -24,19 +21,16 @@ namespace _2DWaypoint
             this.Location = Location;
             comboA = combo1;
             comboB = combo2;
-            panel.Paint += DrawDot;
         }
 
-         ~WayPointButton()
+        public void Draw(Graphics g)
         {
-            
-        }
-
-        private void DrawDot(object sender, PaintEventArgs e)
-        {
-            if (e is PaintEventArgs pe)
-                pe.Graphics.FillEllipse(new SolidBrush(Color.Blue), Location.X, Location.Y, 10, 10);
-
+            if(Selected == true)
+            {
+                color = Color.White;
+            }
+            g.FillEllipse(new SolidBrush(color), Location.X - 10/2, Location.Y -10/2, 10, 10);
+            color = Color.Blue;
         }
 
         public void RadioButtonClicked(object sender, MouseEventArgs e)

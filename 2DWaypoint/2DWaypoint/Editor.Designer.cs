@@ -238,6 +238,7 @@
             this.panel1.Click += new System.EventHandler(this.pictureBoxMap_Click);
             this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragDrop);
             this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragEnter);
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBoxPaint);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Update_Move);
             // 
             // Editor
@@ -266,6 +267,7 @@
             this.Name = "Editor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Editor";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DeleteWaypointInfo);
             ((System.ComponentModel.ISupportInitialize)(this.panel1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
