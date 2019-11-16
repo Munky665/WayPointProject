@@ -1,5 +1,0 @@
-{ X= 12 ,Y= 2 }, Waypoint A
-{ X= -197 ,Y= 120 }, Waypoint B
-{ X= -230 ,Y= -189 }, Waypoint C
-{ X= 175 ,Y= -190 }, Waypoint D
-{ X= 234 ,Y= 110 }, Waypoint E

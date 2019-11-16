@@ -1,29 +1,50 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System;
+using System.Runtime.Serialization;
 
 namespace _2DWaypoint
 {
-    public partial class WayPointButton : IGraphic
+    [Serializable]
+     class WayPointButton : IGraphic
     {
         public static float Radius = 5;
-        ToolTip toolTip = new ToolTip();
         public string Name { get;}
         public PointF Location { get; }
         ComboBox comboA, comboB;
-        PictureBox panel;
         public bool Selected { get; set; }
         Color color = Color.Blue;
 
-        public WayPointButton(string name,PictureBox panel, PointF Location, ComboBox combo1, ComboBox combo2)
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            this.panel = panel;
+            info.AddValue("name", Name, typeof(string));
+            info.AddValue("location.X", Location.X, typeof(float));
+            info.AddValue("location.Y", Location.Y, typeof(float));  
+        }
+
+        public WayPointButton(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("name", typeof(string));
+            PointF tempX = new PointF((float)info.GetValue("location.X", typeof(float)), 0f);
+            PointF tempY = new PointF(0f, (float)info.GetValue("location.Y", typeof(float)));
+            Location = new PointF(tempX.X, tempY.Y);
+            
+        }
+
+        public WayPointButton(string name, PointF Location, ComboBox combo1, ComboBox combo2)
+        {
             Name = name;
             this.Location = Location;
             comboA = combo1;
             comboB = combo2;
         }
 
-        public void Draw(Graphics g)
+        public WayPointButton()
+        {
+        }
+
+        public override void Draw(Graphics g)
         {
             if(Selected == true)
             {
@@ -35,17 +56,18 @@ namespace _2DWaypoint
 
         public void RadioButtonClicked(object sender, MouseEventArgs e)
         {
-            if(Editor.s_comboBox == 0)
+            if(Data.comboBox == 0)
             {
                 comboA.Text = this.Name;
-                Editor.s_comboBox++;
+                Data.comboBox++;
             }
-            else if(Editor.s_comboBox == 1)
+            else if(Data.comboBox == 1)
             {
                 comboB.Text = this.Name;
-                Editor.s_comboBox--;
+                Data.comboBox--;
             }
         }
+
 
     }
 }

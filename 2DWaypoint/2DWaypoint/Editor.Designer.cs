@@ -48,6 +48,7 @@
             this.WaypointListBox = new System.Windows.Forms.ListBox();
             this.WeightedListBox = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.PictureBox();
+            this.HelpWindow = new System.Windows.Forms.HelpProvider();
             ((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -176,7 +177,7 @@
             this.WeightNumText.Name = "WeightNumText";
             this.WeightNumText.Size = new System.Drawing.Size(100, 20);
             this.WeightNumText.TabIndex = 19;
-            this.WeightNumText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EnterPressed);
+            this.WeightNumText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWeightToEdge);
             // 
             // WeightedWaypointLabel
             // 
@@ -208,7 +209,6 @@
             this.WaypointListBox.Name = "WaypointListBox";
             this.WaypointListBox.Size = new System.Drawing.Size(196, 251);
             this.WaypointListBox.TabIndex = 22;
-            this.WaypointListBox.SelectedIndexChanged += new System.EventHandler(this.WaypointListBox_SelectedIndexChanged);
             // 
             // WeightedListBox
             // 
@@ -218,7 +218,6 @@
             this.WeightedListBox.Name = "WeightedListBox";
             this.WeightedListBox.Size = new System.Drawing.Size(196, 316);
             this.WeightedListBox.TabIndex = 23;
-            this.WeightedListBox.SelectedIndexChanged += new System.EventHandler(this.WeightedListBox_SelectedIndexChanged);
             // 
             // panel1
             // 
@@ -240,6 +239,10 @@
             this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.ImageImport_DragEnter);
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBoxPaint);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Update_Move);
+            // 
+            // HelpWindow
+            // 
+            this.HelpWindow.HelpNamespace = ".\\bin\\Main Window.htm";
             // 
             // Editor
             // 
@@ -264,10 +267,15 @@
             this.Controls.Add(this.labelMap);
             this.Controls.Add(this.labelWaypoints);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.HelpButton = true;
+            this.HelpWindow.SetHelpKeyword(this, "Welcome.html");
+            this.HelpWindow.SetHelpNavigator(this, System.Windows.Forms.HelpNavigator.Topic);
             this.Name = "Editor";
+            this.HelpWindow.SetShowHelp(this, true);
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Editor";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DeleteWaypointInfo);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Deselect);
             ((System.ComponentModel.ISupportInitialize)(this.panel1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -294,5 +302,6 @@
         private System.Windows.Forms.ListBox WaypointListBox;
         private System.Windows.Forms.ListBox WeightedListBox;
         private System.Windows.Forms.PictureBox panel1;
+        private System.Windows.Forms.HelpProvider HelpWindow;
     }
 }

@@ -1,41 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using System.Windows;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 
 
 namespace _2DWaypoint
 {
+   
     public partial class Editor : Form
     {
         #region startup
-        char m_waypoint = 'A';
-        string m_mousePos;
-        public static int s_comboBox = 0;
-
-        PointF m_DrawEllipsAt;
         MouseEventArgs m_me;
-
-        List<WayPointButton> m_waypointStorage = new List<WayPointButton>();
-        List<Edge> m_edgeStorage = new List<Edge>();
+        Data m_data;
+        string m_mousePos;
 
         public Editor()
         {
             InitializeComponent();
             panel1.AllowDrop = true;
-            MDIParent.saveFileEvent += ButtonExport_Click;
+            MDIParent.saveFileEvent += SaveAsToolStripMenuItem_Click;
+            MDIParent.openFileEvent += OpenToolStripMenuItem;
             Alert.exportFileEvent += ButtonExport_Click;
-            this.WindowState = FormWindowState.Maximized;
-            this.ControlBox = false;
+
+            WindowState = FormWindowState.Maximized;
+            ControlBox = false;
             KeyPreview = true;
+            m_data = new Data();
+
         }
         #endregion
 
@@ -112,8 +108,8 @@ namespace _2DWaypoint
                                 //copy Whole line to textbox
                                 WaypointListBox.Items.Add(text);
                                 //add waypoint to combo box's
-                                WaypointACombo.Items.Add("Waypoint " + m_waypoint);
-                                WaypointBCombo.Items.Add("Waypoint " + m_waypoint);
+                                WaypointACombo.Items.Add("Waypoint " + m_data.waypoint);
+                                WaypointBCombo.Items.Add("Waypoint " + m_data.waypoint);
                                 //add each word between spaces in line to array
                                 string[] numbers = text.Split();
                                 //check for numbers
@@ -137,7 +133,7 @@ namespace _2DWaypoint
                                     }
                                 }
                                 //create buttons in positions given by file
-                                WayPointButton button = new WayPointButton("Waypoint" + m_waypoint,panel1,
+                                WayPointButton button = new WayPointButton("Waypoint" + m_data.waypoint,
                                                                             new Point(posX , posY),
                                                                             WaypointACombo, WaypointBCombo);
                                 //set mouse click event to button
@@ -146,9 +142,9 @@ namespace _2DWaypoint
                                 posX = 0;
                                 posY = 0;
                                 //add waypoints to Waypoint list.
-                                m_waypointStorage.Add(button);
+                                m_data.AddWaypoint(button);
                                 panel1.Invalidate();
-                                m_waypoint++;
+                                m_data.waypoint++;
 
                             }
                             else
@@ -170,29 +166,29 @@ namespace _2DWaypoint
             if (e is MouseEventArgs)
             {
 
-                WayPointButton temp = Select(m_DrawEllipsAt);
+                WayPointButton temp = Select(m_data.DrawEllipsAt);
                 if (temp == null)
                 {
-                    if (m_waypoint >= 'Z')
+                    if (m_data.waypoint >= 'Z')
                     {
-                        m_waypoint = 'a';
+                        m_data.waypoint = 'a';
                     }
 
                     //adds waypoint coordinates to text box
                     WaypointListBox.Items.Add(m_mousePos
                         + ", "
                         + "Waypoint "
-                        + m_waypoint.ToString()
+                        + m_data.waypoint.ToString()
                         + Environment.NewLine);
                     //adds waypoint letters to combo boxes
                     WaypointACombo.Items.Add("Waypoint "
-                        + m_waypoint.ToString());
+                        + m_data.waypoint.ToString());
                     WaypointBCombo.Items.Add("Waypoint "
-                        + m_waypoint.ToString());
+                        + m_data.waypoint.ToString());
 
                     //add Dot
                     PlaceDot("Waypoint "
-                    + m_waypoint.ToString());
+                    + m_data.waypoint.ToString());
 
                 }
                 else
@@ -200,21 +196,21 @@ namespace _2DWaypoint
                     temp.Selected = !temp.Selected;
                    
                 }
-
+                UpdateComboBox(temp);
                 //refresh picture box
                 panel1.Invalidate();
                 //increment waypoint letter
-                m_waypoint++;
+                m_data.waypoint++;
             }
            
         }
         private void PictureBoxPaint(object sender, PaintEventArgs e)
         {
-            foreach (WayPointButton wp in m_waypointStorage)
+            foreach (WayPointButton wp in m_data.GetWayPointButtons())
             {
                 wp.Draw(e.Graphics);
             }
-            foreach(Edge ed in m_edgeStorage)
+            foreach(Edge ed in m_data.GetEdges())
             {
                 ed.Draw(e.Graphics);
             }
@@ -233,7 +229,7 @@ namespace _2DWaypoint
                 //draw coordinates to label
                 CoordinatesLabel.Text = m_mousePos;
 
-                m_DrawEllipsAt = new PointF(e.Location.X, e.Location.Y);
+                m_data.DrawEllipsAt = new PointF(e.Location.X, e.Location.Y);
 
             }
         }
@@ -257,13 +253,16 @@ namespace _2DWaypoint
             //get file information
             foreach(string pic in ((string[])e.Data.GetData(DataFormats.FileDrop)))
             {
+                m_data.SetMap(pic);
+                ClearAll();
                 try
                 {//set img to image that was dropped in
                     Image img = Image.FromFile(pic);
                     Graphics g = panel1.CreateGraphics();
                     //set image to background of panel
                     
-                    panel1.BackgroundImage = img; //g.DrawImage(img, new Point ((panel1.Width / 2) - img.Width / 2 , (panel1.Height / 2) - img.Height / 2));
+                    panel1.BackgroundImage = img;
+                    panel1.Size = img.Size;
                 }
                 catch
                 {
@@ -271,74 +270,99 @@ namespace _2DWaypoint
                 }
             }
 
-
-
         }
         //adds weighted waypoint edge when enter pressed
-        private void EnterPressed(object sender, EventArgs e)
+        private void AddWeightToEdge(object sender, KeyEventArgs e)
         {
-            KeyEventArgs me = e as KeyEventArgs;
-            if (me.KeyCode == Keys.Enter)
+
+            if (e.KeyCode == Keys.Enter)
             {
                 //turn of 'ding' sound when enter key is pressed.
-                me.Handled = true;
-                me.SuppressKeyPress = true;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                //checking if there is text in the waypoint combo box
+                try
+                {
+                    if (WaypointACombo.SelectedItem.ToString() == WaypointBCombo.SelectedItem.ToString())
+                    {
+                        MessageBox.Show("Cannot Connect same waypoint");
+                        WeightNumText.Text = null;
+                        WaypointACombo.Text = null;
+                        WaypointBCombo.Text = null;
+                    }
+                    else
+                    {
+                        WeightedListBox.Items.Add(WaypointACombo.SelectedItem.ToString() + ", "
+                            + WaypointBCombo.SelectedItem.ToString() + ", " + "Weight "
+                            + WeightNumText.Text.ToString());
 
-                WeightedListBox.Items.Add(WaypointACombo.SelectedItem.ToString() + ", "
-                    + WaypointBCombo.SelectedItem.ToString() + ", " + "Weight "
-                    + WeightNumText.Text.ToString());
+                        m_data.AddEdge(Edge.CreateEdge(m_data.GetWayPointButtons(), WaypointACombo, WaypointBCombo));
+                        panel1.Invalidate();
+                        WeightNumText.Text = null;
+                        WaypointACombo.Text = null;
+                        WaypointBCombo.Text = null;
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("There are no waypoints selected to join");
+                }
+            }
+        }
+        //deselect waypoints
+        private void Deselect(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape)
+            {   
+                foreach(WayPointButton b in m_data.GetWayPointButtons())
+                {
+                    if(b.Selected == true)
+                    {
+                        b.Selected = false;
+                    }
+                }
+                e.Handled = true;
+                e.SuppressKeyPress = true;
 
-                CreateEdge();
-
-                WeightNumText.Text = null;
+                m_data.box = 0;
                 WaypointACombo.Text = null;
                 WaypointBCombo.Text = null;
+                panel1.Invalidate();
             }
-
-        }
-        private void WeightedListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
-        private void WaypointListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         #endregion
         #region Clear/PlaceFunctions
         //clears all text boxes, waypoints and combo boxes
         private void ClearAll()
         {
-            m_waypoint = 'A';
+            m_data.waypoint = 'A';
             WaypointListBox.Items.Clear();
             WaypointACombo.Items.Clear();
             WaypointACombo.Text = "";
             WaypointBCombo.Items.Clear();
             WaypointBCombo.Text = "";
             WeightedListBox.Items.Clear();
-            panel1.Controls.Clear();
-            m_waypointStorage.Clear();
-            m_edgeStorage.Clear();
+            m_data.ClearData();
             panel1.Invalidate();
 
         }
         //places New Waypoint
         private void PlaceDot(string name)
         {
-            WayPointButton waypointDot = new WayPointButton(name, panel1, m_DrawEllipsAt, 
+            WayPointButton waypointDot = new WayPointButton(name, m_data.DrawEllipsAt, 
                                                             WaypointACombo, 
                                                             WaypointBCombo);
-            m_waypointStorage.Add(waypointDot);
+            m_data.AddWaypoint(waypointDot);
         }
         //deletes waypoint info from list boxes and text boxes
-
         private void DeleteWaypointInfo(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                foreach (WayPointButton b in m_waypointStorage)
+                List<WayPointButton> deleteHolder = new List<WayPointButton>();
+                foreach (WayPointButton b in m_data.GetWayPointButtons())
                 {
                     if (b.Selected)
                     {
@@ -356,17 +380,10 @@ namespace _2DWaypoint
 
                             if (WeightedListBox.Items[i].ToString().Contains(b.Name))
                             {
-                                foreach (Edge ed in m_edgeStorage)
-                                {
-                                    if (WeightedListBox.Items[i].ToString().Contains(ed.Name))
-                                        m_edgeStorage.Remove(ed);
-                                    break;
-                                }
                                 WeightedListBox.Items.RemoveAt(i);
                             }
+
                         }
-
-
                         //check if waypoint is in the combo box
                         for (int i = 0; i < WaypointACombo.Items.Count; i++)
                         {
@@ -376,65 +393,168 @@ namespace _2DWaypoint
                                 WaypointBCombo.Items.RemoveAt(i);
                             }
                         }
+                        List<Edge> temp = new List<Edge>();
+                        foreach (Edge ed in m_data.GetEdges())
+                        {
+                            if (ed.Start == b.Location || ed.End == b.Location)
+                                temp.Add(ed);
+                        }
+                        foreach(Edge ed in temp)
+                        {
+                            m_data.RemoveEdge(ed);
+                        }
                         //clear the way point box text of selected
                         if (WaypointACombo.Text == b.Name)
                             WaypointACombo.Text = "";
                         //clear waypoint box text of selected
                         if (WaypointBCombo.Text == b.Name)
                             WaypointBCombo.Text = "";
-                        m_waypointStorage.Remove(b);
-
-                        panel1.Invalidate();
-                        break;
+                        deleteHolder.Add(b);
+     
                     }
                 }
+                foreach(WayPointButton b in deleteHolder)
+                {
+                    m_data.RemoveWaypoint(b);
+                }
+                panel1.Invalidate();
             }
         }
-        //select Waypoint
-
+        //return waypoint that has been clicked
         private WayPointButton Select(PointF location)
         {
             WayPointButton nothing = null;
 
-            foreach(WayPointButton wp in m_waypointStorage)
+            foreach(WayPointButton wp in m_data.GetWayPointButtons())
             {
                 PointF vector = VectorMath.Minus(location, wp.Location);
                 float length = VectorMath.Magnitued(vector);
-                if(length < WayPointButton.Radius)
+                if(length < WayPointButton.Radius + m_data.selectBuffer)
                 {
                     return wp;
                 }
             }
             return nothing;
         }
-
-        void CreateEdge()
+        //add clicked waypoint to comboBox
+        private void UpdateComboBox(WayPointButton b)
         {
-
-            PointF start = new PointF();
-            PointF end = new PointF();
-            string edgeName = null;
-
-            for (int i = 0; i < m_waypointStorage.Count; i++)
+            if (b != null)
             {
-                if (m_waypointStorage[i].Name == WaypointACombo.Text)
+                if (b.Selected == true)
                 {
-                    start = m_waypointStorage[i].Location;
-                    edgeName += m_waypointStorage[i].Name;
-                }
-                if (m_waypointStorage[i].Name == WaypointBCombo.Text)
-                {
-                    end = m_waypointStorage[i].Location;
-                    edgeName += ", " + m_waypointStorage[i].Name;
+                    if (m_data.box == 0)
+                    {
+                        WaypointACombo.Text = b.Name;
+                        m_data.box++;
+                    }
+                    else if (m_data.box == 1)
+                    {
+                        WaypointBCombo.Text = b.Name;
+                        m_data.box--;
+                    }
                 }
             }
+        }
 
-            Edge NewEdge = new Edge(edgeName, start, end);
-            m_edgeStorage.Add(NewEdge);
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach(string s in WaypointListBox.Items)
+            {
+                m_data.AddToWaypointList(s);
+            }
+            foreach(string s in WeightedListBox.Items)
+            {
+                m_data.AddToWeightList(s);
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            saveFileDialog.Filter = "Dat Files (*.dat)|*.dat|All Files (*.*)|*.*";
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                string FileName = saveFileDialog.FileName;
+
+                BinaryFormatter bf = new BinaryFormatter();
+
+                SerializeItem(FileName, bf);
+            }
+
+        }
+
+        private void OpenToolStripMenuItem(object sender, EventArgs e)
+        {
+            OpenFileDialog openFile = new OpenFileDialog();
+            openFile.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            openFile.Filter = "Dat Files (*.dat)|*.dat|All Files (*.*)|*.*";
+
+            if(openFile.ShowDialog(this) == DialogResult.OK)
+            {
+                ClearAll();
+                string FileName = openFile.FileName;
+                BinaryFormatter bf = new BinaryFormatter();
+                DeSerializeItem(FileName, bf);
+                LoadImageFromSave();
+                UpdatePictureBox();
+            }
+        }
+        #endregion
+
+        public void SerializeItem(string fileName, IFormatter formatter)
+        {
+            FileStream s = new FileStream(fileName, FileMode.Create);
+            if(m_data != null)
+            formatter.Serialize(s, m_data);
+            s.Close();
+        }
+
+        public void DeSerializeItem(string fileName, IFormatter formatter)
+        {
+            FileStream s = new FileStream(fileName, FileMode.Open);
+            m_data = (Data)formatter.Deserialize(s);
+            s.Close();
+
+        }
+
+        void UpdatePictureBox()
+        {
+            foreach (string s in m_data.GetWaypoints())
+            {
+                WaypointListBox.Items.Add(s);
+            }
+            foreach (string s in m_data.GetWeights())
+            {
+                WeightedListBox.Items.Add(s);
+            }
+            char tempLetter = 'A';
+            for (int i = 0; i < WaypointListBox.Items.Count; i++)
+            {
+                WaypointACombo.Items.Add("Waypoint " + tempLetter);
+                WaypointBCombo.Items.Add("Waypoint " + tempLetter);
+                tempLetter++;
+            }
             panel1.Invalidate();
         }
 
-        #endregion
+        void LoadImageFromSave()
+        {
+            if (m_data.GetMap() != null)
+            {
+                try
+                {//set img to image that was dropped in
+                    Image img = Image.FromFile(m_data.GetMap());
+                    Graphics g = panel1.CreateGraphics();
+                    //set image to background of panel
 
+                    panel1.BackgroundImage = img;
+                    panel1.Size = img.Size;
+                }
+                catch
+                {
+                    MessageBox.Show("Map File Cannot be found, please re-import");
+                }
+            }
+        }
     }
 }

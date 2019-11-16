@@ -1,0 +1,6 @@
+{ X= 166 ,Y= 151 }, Waypoint A
+{ X= 135 ,Y= 35 }, Waypoint B
+{ X= 39 ,Y= 115 }, Waypoint C
+{ X= 86 ,Y= 160 }, Waypoint D
+{ X= 68 ,Y= 50 }, Waypoint E
+Waypoint B, Waypoint D, Weight 12

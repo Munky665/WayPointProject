@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Editor.cs">
       <SubType>Form</SubType>
@@ -69,9 +70,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorMath.cs" />
-    <Compile Include="WayPointButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="WayPointButton.cs" />
     <EmbeddedResource Include="Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>

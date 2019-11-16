@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+public delegate void NewFileDelegate(object sender, EventArgs e);
 public delegate void ExportFileDelegate(object sender, EventArgs e);
 namespace _2DWaypoint
 {
+
     public partial class Alert : Form
     {
         public static ExportFileDelegate exportFileEvent;
@@ -24,23 +25,14 @@ namespace _2DWaypoint
         {
             if(e is MouseEventArgs)
             {
-                Form childForm = new Editor();
-                childForm.Name = "Editor";
-                childForm.MdiParent = this;
-                childForm.Text = "Editor Window";
-                childForm.Show();
+                MDIParent.saveFileEvent?.Invoke(sender, e);
+                ActiveForm.Close();
                 this.Close();
-
             }
         }
 
         private void NoButton_Click(object sender, EventArgs e)
         {
-            Form childForm = new Editor();
-            childForm.Name = "Editor";
-            childForm.MdiParent = this;
-            childForm.Text = "Editor Window";
-            childForm.Show();
             this.Close();
         }
     }
