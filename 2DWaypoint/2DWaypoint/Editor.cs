@@ -5,13 +5,14 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Runtime.Serialization;
 
 
 
 namespace _2DWaypoint
 {
-   
+
     public partial class Editor : Form
     {
         #region startup
@@ -25,6 +26,7 @@ namespace _2DWaypoint
             panel1.AllowDrop = true;
             MDIParent.saveFileEvent += SaveAsToolStripMenuItem_Click;
             MDIParent.openFileEvent += OpenToolStripMenuItem;
+            Alert.clearAllEvent += ClearAll;
             Alert.exportFileEvent += ButtonExport_Click;
 
             WindowState = FormWindowState.Maximized;
@@ -39,6 +41,7 @@ namespace _2DWaypoint
         //exports data to csv file format.
         private void ButtonExport_Click(object sender, EventArgs e)
         {
+
             Stream myStream;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "csv files (*.csv)| *.csv|All Files(*,*)|*.*";
@@ -52,17 +55,17 @@ namespace _2DWaypoint
                     //temp string to hold item values
                     string temp = "";
                     //write item values to string
-                    foreach(string s in WaypointListBox.Items)
+                    foreach (string s in WaypointListBox.Items)
                     {
-                        temp += s;
+                        temp += s + Environment.NewLine;
                     }
                     //add string to bytes var
                     var bytes = Encoding.ASCII.GetBytes(temp);
                     //clear temp value
                     temp = "";
-                    foreach(string s in WeightedListBox.Items)
+                    foreach (string s in WeightedListBox.Items)
                     {
-                        temp += s;
+                        temp += s + Environment.NewLine;
                     }
                     var bytesW = Encoding.ASCII.GetBytes(temp);
 
@@ -76,8 +79,8 @@ namespace _2DWaypoint
         //import text/csv file
         private void buttonImport_Click(object sender, EventArgs e)
         {
+
             Stream myStream;
-            ClearAll();
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
                 Filter = "txt files (*.txt)| *.txt|All Files(*,*)|*.*",
@@ -88,6 +91,7 @@ namespace _2DWaypoint
             {
                 if ((myStream = openFileDialog.OpenFile()) != null)
                 {
+                    ClearAll();
                     using (StreamReader reader = new StreamReader(myStream))
                     {
                         //holds x position saved in a line
@@ -102,14 +106,13 @@ namespace _2DWaypoint
                         {
                             //check read line to string
                             string text = reader.ReadLine();
+
                             //check if the line starts with {
                             if (text.StartsWith("{"))
                             {
                                 //copy Whole line to textbox
                                 WaypointListBox.Items.Add(text);
-                                //add waypoint to combo box's
-                                WaypointACombo.Items.Add("Waypoint " + m_data.waypoint);
-                                WaypointBCombo.Items.Add("Waypoint " + m_data.waypoint);
+
                                 //add each word between spaces in line to array
                                 string[] numbers = text.Split();
                                 //check for numbers
@@ -133,31 +136,78 @@ namespace _2DWaypoint
                                     }
                                 }
                                 //create buttons in positions given by file
-                                WayPointButton button = new WayPointButton("Waypoint" + m_data.waypoint,
-                                                                            new Point(posX , posY),
+                                WayPointButton button = new WayPointButton("Waypoint " + m_data.waypoint,
+                                                                            new Point(posX, posY),
                                                                             WaypointACombo, WaypointBCombo);
-                                //set mouse click event to button
-                                
                                 //reset variables
                                 posX = 0;
                                 posY = 0;
+
                                 //add waypoints to Waypoint list.
                                 m_data.AddWaypoint(button);
+
+                                //add waypoint to combo box's
+                                WaypointACombo.Items.Add("Waypoint " + m_data.waypoint);
+                                WaypointBCombo.Items.Add("Waypoint " + m_data.waypoint);
                                 panel1.Invalidate();
+
                                 m_data.waypoint++;
 
-                            }
-                            else
+                            }//end text starts with {
+                            else if (!text.StartsWith("{"))
                             {
                                 //add weighted waypoint information to text box
-                                WeightedListBox.Text += text + Environment.NewLine;
+                                if(text.Contains("Waypoint"))
+                                WeightedListBox.Items.Add(text);
                             }
+
                         }
-                    }
-                    myStream.Close();
+                        //variables to store edge
+                        PointF start = new PointF(0, 0);
+                        PointF end = new PointF(0, 0);
+                        string name = null;
+                        //loop through items in weighted list box
+                        for (int i = 0; i < WeightedListBox.Items.Count; ++i)
+                        {
+                            //check if item matches a waypoint name store location in start if true
+                            foreach (WayPointButton b in m_data.GetWayPointButtons())
+                            {
+
+                                if (WeightedListBox.Items[i].ToString().Contains(b.Name))
+                                {
+                                    name = b.Name + ", ";
+                                    start = b.Location;
+                                }
+                            }
+                            //check if item matches waypoint name, store location in end if true
+                            foreach (WayPointButton b in m_data.GetWayPointButtons())
+                            {
+                                if (WeightedListBox.Items[i].ToString().Contains(b.Name))
+                                {
+                                    if (name.Contains(b.Name) == false)
+                                    {
+                                        name += b.Name;
+                                        end = b.Location;
+                                    }
+                                }
+                            }
+                            //if end is not 0,0 create new edge
+                            if (end != new PointF(0, 0))
+                            {
+                                Edge ed = new Edge(name, start, end);
+                                m_data.AddEdge(ed);
+                                panel1.Invalidate();
+                            }
+                            
+                        }
+
+
+                    }//end stream
                 }
+                myStream.Close();
             }
         }
+    
         #endregion
         #region FormEvents
         //adds new waypoint when panel is clicked
@@ -295,12 +345,16 @@ namespace _2DWaypoint
                         WeightedListBox.Items.Add(WaypointACombo.SelectedItem.ToString() + ", "
                             + WaypointBCombo.SelectedItem.ToString() + ", " + "Weight "
                             + WeightNumText.Text.ToString());
-
-                        m_data.AddEdge(Edge.CreateEdge(m_data.GetWayPointButtons(), WaypointACombo, WaypointBCombo));
+                        
+                        m_data.AddEdge(new Edge(m_data.GetWayPointButtons(), WaypointACombo, WaypointBCombo));
                         panel1.Invalidate();
                         WeightNumText.Text = null;
                         WaypointACombo.Text = null;
                         WaypointBCombo.Text = null;
+                        foreach(WayPointButton wb in m_data.GetWayPointButtons())
+                        {
+                            wb.Selected = false;
+                        }
                     }
                 }
                 catch
@@ -459,15 +513,20 @@ namespace _2DWaypoint
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach(string s in WaypointListBox.Items)
+            //clear waypoint list to ensure no double ups
+            m_data.ClearWaypointList();
+            foreach (string s in WaypointListBox.Items)
             {
                 m_data.AddToWaypointList(s);
             }
-            foreach(string s in WeightedListBox.Items)
+            //clear weightlist to ensure no double ups
+            m_data.ClearWeightList();
+            foreach (string s in WeightedListBox.Items)
             {
                 m_data.AddToWeightList(s);
             }
 
+            //start save dialog
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             saveFileDialog.Filter = "Dat Files (*.dat)|*.dat|All Files (*.*)|*.*";
@@ -503,7 +562,11 @@ namespace _2DWaypoint
 
         public void SerializeItem(string fileName, IFormatter formatter)
         {
-            FileStream s = new FileStream(fileName, FileMode.Create);
+            if(File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            FileStream s = File.Create(fileName);
             if(m_data != null)
             formatter.Serialize(s, m_data);
             s.Close();
@@ -532,7 +595,7 @@ namespace _2DWaypoint
             {
                 WaypointACombo.Items.Add("Waypoint " + tempLetter);
                 WaypointBCombo.Items.Add("Waypoint " + tempLetter);
-                tempLetter++;
+               tempLetter++;
             }
             panel1.Invalidate();
         }

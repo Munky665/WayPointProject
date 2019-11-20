@@ -25,10 +25,30 @@ namespace _2DWaypoint
         {
             info.AddValue("map", map, typeof(string));
             info.AddValue("waypoint", waypoint, typeof(char));
-            info.AddValue("Waypoints", m_waypointStorage, typeof(List<WayPointButton>));
-            info.AddValue("Edge", m_edgeStorage, typeof(List<Edge>));
-            info.AddValue("waypointList", WaypointListBox, typeof(List<string>));
-            info.AddValue("weightList", WeightListBox, typeof(List<string>));
+
+            info.AddValue("waypointCount", m_waypointStorage.Count, typeof(int));
+            for (int i = 0; i < m_waypointStorage.Count; i++)
+            {
+                info.AddValue("Waypoints" + i, m_waypointStorage[i], typeof(WayPointButton));
+            }
+
+            info.AddValue("edgeCount", m_edgeStorage.Count, typeof(int));
+            for(int i = 0; i < m_edgeStorage.Count; i++)
+            {
+                info.AddValue("Edge" + i, m_edgeStorage[i],typeof(Edge));
+            }
+
+            info.AddValue("waypointlistCount", WaypointListBox.Count, typeof(int));
+            for(int i = 0; i < WaypointListBox.Count; i++)
+            {
+                info.AddValue("waypointList" +i, WaypointListBox[i], typeof(string));
+            }
+
+            info.AddValue("weightlistCount", WeightListBox.Count, typeof(int));
+            for(int i = 0; i < WeightListBox.Count; i++)
+            {
+                info.AddValue("weightList" + i, WeightListBox[i], typeof(string));
+            }
         }
 
 
@@ -36,10 +56,30 @@ namespace _2DWaypoint
         {
             map = (string)info.GetValue("map", typeof(string));
             waypoint = (char)info.GetValue("waypoint", typeof(char));
-            m_waypointStorage = (List<WayPointButton>)info.GetValue("Waypoints", typeof(List<WayPointButton>));
-            m_edgeStorage = (List<Edge>)info.GetValue("Edge", typeof(List<Edge>));
-            WaypointListBox = (List<string>)info.GetValue("waypointList", typeof(List<string>));
-            WeightListBox = (List<string>)info.GetValue("weightList", typeof(List<string>));
+
+            int count = (int)info.GetValue("waypointCount", typeof(int));
+            for(int i = 0; i < count; i++)
+            {
+                m_waypointStorage.Add((WayPointButton)info.GetValue("Waypoints" + i, typeof(WayPointButton)));
+            }
+
+            count = (int)info.GetValue("edgeCount", typeof(int));
+            for (int i = 0; i < count; i++)
+            {
+                m_edgeStorage.Add((Edge)info.GetValue("Edge" + i, typeof(Edge)));
+            }
+
+            count = (int)info.GetValue("waypointlistCount", typeof(int));
+            for (int i = 0; i < count; i++)
+            {
+                WaypointListBox.Add((string)info.GetValue("waypointList" + i, typeof(string)));
+            }
+
+            count = (int)info.GetValue("weightlistCount", typeof(int));
+            for (int i = 0; i < count; i++)
+            {
+                WeightListBox.Add((string)info.GetValue("weightList" + i, typeof(string)));
+            }
         }
 
         public Data()
@@ -110,9 +150,18 @@ namespace _2DWaypoint
         {
             return WaypointListBox;
         }
+
+        public void ClearWaypointList()
+        {
+            WaypointListBox.Clear();
+        }
         public List<string> GetWeights()
         {
             return WeightListBox;
+        }
+        public void ClearWeightList()
+        {
+            WeightListBox.Clear();
         }
     }
 }

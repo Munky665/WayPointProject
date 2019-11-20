@@ -15,7 +15,7 @@ namespace _2DWaypoint
         Color m_color = Color.White;
         public PointF Length { get; }
         public string Name { get; }
-
+        //define items to be serialized
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("name", Name, typeof(string));
@@ -24,7 +24,7 @@ namespace _2DWaypoint
             info.AddValue("End.X", End.X, typeof(float));
             info.AddValue("End.Y", End.Y, typeof(float));
         }
-
+        //Load dat file constructor
         public Edge(SerializationInfo info, StreamingContext context)
         {
             Name = (string)info.GetValue("name", typeof(string));
@@ -36,7 +36,7 @@ namespace _2DWaypoint
             End = new PointF(tempX.X, tempY.Y);
             Length = VectorMath.Minus(Start, End);
         }
-
+        //defult constructor
         public Edge(string n, PointF s, PointF e)
         {
             Start = s;
@@ -44,7 +44,7 @@ namespace _2DWaypoint
             Name = n;
             Length = VectorMath.Minus(Start, End);
         }
-
+        //draw line
         public override void Draw(Graphics g)
         {
             if(Selected == true)
@@ -58,30 +58,24 @@ namespace _2DWaypoint
             Pen pen = new Pen(m_color, 2);
             g.DrawLine(pen, Start, End);
         }
-
-        public static Edge CreateEdge(List<WayPointButton> waypoints, ComboBox a, ComboBox b)
+        //constructor to add weight to waypoints.
+        public Edge(List<WayPointButton> waypoints, ComboBox a, ComboBox b)
         {
-
-            PointF start = new PointF();
-            PointF end = new PointF();
-            string edgeName = null;
 
             for (int i = 0; i < waypoints.Count; i++)
             {
                 if (waypoints[i].Name == a.Text)
                 {
-                    start = waypoints[i].Location;
-                    edgeName += waypoints[i].Name;
+                    Start = waypoints[i].Location;
+                    Name += waypoints[i].Name;
                 }
                 if (waypoints[i].Name == b.Text)
                 {
-                    end = waypoints[i].Location;
-                    edgeName += ", " + waypoints[i].Name;
+                    End = waypoints[i].Location;
+                    Name += ", " + waypoints[i].Name;
                 }
             }
 
-            Edge NewEdge = new Edge(edgeName, start, end);
-            return NewEdge;
         }
 
 

@@ -1,0 +1,13 @@
+{ X= 135 ,Y= 194 }, Waypoint A
+
+{ X= 299 ,Y= 230 }, Waypoint B
+
+{ X= 263 ,Y= 93 }, Waypoint C
+
+{ X= 92 ,Y= 315 }, Waypoint D
+
+{ X= 214 ,Y= 290 }, Waypoint E
+
+{ X= 214 ,Y= 151 }, Waypoint F
+
+Waypoint C, Waypoint E, Weight 12

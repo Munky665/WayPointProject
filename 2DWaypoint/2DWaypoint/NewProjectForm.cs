@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 public delegate void NewFileDelegate(object sender, EventArgs e);
 public delegate void ExportFileDelegate(object sender, EventArgs e);
+public delegate void ClearAll();
 namespace _2DWaypoint
 {
 
     public partial class Alert : Form
     {
         public static ExportFileDelegate exportFileEvent;
+        public static ClearAll clearAllEvent;
         public Alert()
         {
             InitializeComponent();
@@ -26,13 +28,14 @@ namespace _2DWaypoint
             if(e is MouseEventArgs)
             {
                 MDIParent.saveFileEvent?.Invoke(sender, e);
-                ActiveForm.Close();
+                clearAllEvent?.Invoke();
                 this.Close();
             }
         }
 
         private void NoButton_Click(object sender, EventArgs e)
         {
+            clearAllEvent?.Invoke();
             this.Close();
         }
     }
