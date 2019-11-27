@@ -510,7 +510,7 @@ namespace _2DWaypoint
                 }
             }
         }
-
+        //saves item when save icon on tool strip clicked
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //clear waypoint list to ensure no double ups
@@ -541,7 +541,7 @@ namespace _2DWaypoint
             }
 
         }
-
+        //open file using tool strip menu item
         private void OpenToolStripMenuItem(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
@@ -559,7 +559,7 @@ namespace _2DWaypoint
             }
         }
         #endregion
-
+        //function to serialize data for .dat file
         public void SerializeItem(string fileName, IFormatter formatter)
         {
             if(File.Exists(fileName))
@@ -571,7 +571,7 @@ namespace _2DWaypoint
             formatter.Serialize(s, m_data);
             s.Close();
         }
-
+        //function to deserialize from dat file
         public void DeSerializeItem(string fileName, IFormatter formatter)
         {
             FileStream s = new FileStream(fileName, FileMode.Open);
@@ -579,7 +579,7 @@ namespace _2DWaypoint
             s.Close();
 
         }
-
+        //updates picture box with waypoints in list box.
         void UpdatePictureBox()
         {
             foreach (string s in m_data.GetWaypoints())
@@ -599,7 +599,7 @@ namespace _2DWaypoint
             }
             panel1.Invalidate();
         }
-
+        //loads map from file if file hasn't been relocated.
         void LoadImageFromSave()
         {
             if (m_data.GetMap() != null)
@@ -615,7 +615,7 @@ namespace _2DWaypoint
                 }
                 catch
                 {
-                    MessageBox.Show("Map File Cannot be found, please re-import");
+                    MessageBox.Show("Map File Cannot be found, export waypoints as .csv then re-import, then re-import .csv");
                 }
             }
         }

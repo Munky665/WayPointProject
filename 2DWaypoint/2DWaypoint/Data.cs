@@ -23,10 +23,13 @@ namespace _2DWaypoint
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            //adds the maps file location to save file
             info.AddValue("map", map, typeof(string));
+            //adds the waypoint char to save file
             info.AddValue("waypoint", waypoint, typeof(char));
-
+            //adds a reference count for the waypoints in waypoint storage 
             info.AddValue("waypointCount", m_waypointStorage.Count, typeof(int));
+            //adds waypoint storage list to save file
             for (int i = 0; i < m_waypointStorage.Count; i++)
             {
                 info.AddValue("Waypoints" + i, m_waypointStorage[i], typeof(WayPointButton));
@@ -81,17 +84,17 @@ namespace _2DWaypoint
                 WeightListBox.Add((string)info.GetValue("weightList" + i, typeof(string)));
             }
         }
-
+        //default constructor
         public Data()
         {
 
         }
-
+        //sets map location to string
         public void SetMap(string s)
         {
             map = s;
         }
-
+        //gets string with map location
         public string GetMap()
         {
             if (map != "")
@@ -99,26 +102,27 @@ namespace _2DWaypoint
             else
                 return null;
         }
+        //adds a waypoint button to waypoint list
         public void AddWaypoint(WayPointButton b)
         {
             m_waypointStorage.Add(b);
         }
-
+        //adds an edge to storage
         public void AddEdge(Edge e)
         {
             m_edgeStorage.Add(e);
         }
-
+        //gets the list of waypoints
         public List<WayPointButton> GetWayPointButtons()
         {
             return m_waypointStorage;
         }
-
+        //gets the list of edges
         public List<Edge> GetEdges()
         {
             return m_edgeStorage;
         }
-
+        //clears all lists
         public void ClearData()
         {
             m_waypointStorage.Clear();
@@ -126,39 +130,42 @@ namespace _2DWaypoint
             WeightListBox.Clear();
             WaypointListBox.Clear();
         }
-
+        //remove specified edge
         public void RemoveEdge(Edge e)
         {
             m_edgeStorage.Remove(e);
         }
+        //remove specified waypoint
         public void RemoveWaypoint(WayPointButton b)
         {
             m_waypointStorage.Remove(b);
         }
-
+        //add waypoint name to listbox
         public void AddToWaypointList(string s)
         {
             WaypointListBox.Add(s);
         }
-
+        //add weight of edge to list box
         public void AddToWeightList(string s)
         {
             WeightListBox.Add(s);
         }
-
+        //get list of waypoint names
         public List<string> GetWaypoints()
         {
             return WaypointListBox;
         }
-
+        //clear the waypoint list box
         public void ClearWaypointList()
         {
             WaypointListBox.Clear();
         }
+        //returns the list of weights
         public List<string> GetWeights()
         {
             return WeightListBox;
         }
+        //clears the weights from the list box
         public void ClearWeightList()
         {
             WeightListBox.Clear();
