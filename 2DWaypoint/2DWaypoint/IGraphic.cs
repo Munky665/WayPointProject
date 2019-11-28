@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace _2DWaypoint
-{
+{//abstract class.
     class IGraphic : ISerializable
     {
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
