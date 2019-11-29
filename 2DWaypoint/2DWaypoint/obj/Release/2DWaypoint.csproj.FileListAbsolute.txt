@@ -10,3 +10,15 @@ D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.cs
 D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.csproj.CoreCompileInputs.cache
 D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.exe
 D:\Aie Class\Intro to C#\Project\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.pdb
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\bin\Release\2DWaypoint.exe.config
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\bin\Release\2DWaypoint.exe
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\bin\Release\2DWaypoint.pdb
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.csprojAssemblyReference.cache
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\_2DWaypoint.Editor.resources
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\_2DWaypoint.MDIParent.resources
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\_2DWaypoint.Alert.resources
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\_2DWaypoint.Properties.Resources.resources
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.csproj.GenerateResource.cache
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.csproj.CoreCompileInputs.cache
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.exe
+D:\Aie Classes\CSharp intro\WayPointProject\2DWaypoint\2DWaypoint\obj\Release\2DWaypoint.pdb
