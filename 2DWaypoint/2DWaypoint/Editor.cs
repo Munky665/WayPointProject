@@ -289,7 +289,7 @@ namespace _2DWaypoint
             if(e is MouseEventArgs)
             {
                 MouseEventArgs me = e as MouseEventArgs;
-                ClearAll();
+                ClearButton();
             }
         }
         //allows image to be dragged into the window
@@ -304,15 +304,14 @@ namespace _2DWaypoint
             foreach(string pic in ((string[])e.Data.GetData(DataFormats.FileDrop)))
             {
                 m_data.SetMap(pic);
-                ClearAll();
+
                 try
                 {//set img to image that was dropped in
                     Image img = Image.FromFile(pic);
                     Graphics g = panel1.CreateGraphics();
                     //set image to background of panel
-                    
-                    panel1.BackgroundImage = img;
-                    panel1.Size = img.Size;
+                    panel1.Image = null;
+                    panel1.Image = img;
                 }
                 catch
                 {
@@ -390,6 +389,19 @@ namespace _2DWaypoint
         #region Clear/PlaceFunctions
         //clears all text boxes, waypoints and combo boxes
         private void ClearAll()
+        {
+            m_data.waypoint = 'A';
+            WaypointListBox.Items.Clear();
+            WaypointACombo.Items.Clear();
+            WaypointACombo.Text = "";
+            WaypointBCombo.Items.Clear();
+            WaypointBCombo.Text = "";
+            WeightedListBox.Items.Clear();
+            m_data.ClearData();    
+            panel1.Invalidate();
+            panel1.Image = null;
+        }
+        private void ClearButton()
         {
             m_data.waypoint = 'A';
             WaypointListBox.Items.Clear();
@@ -608,10 +620,7 @@ namespace _2DWaypoint
                 {//set img to image that was dropped in
                     Image img = Image.FromFile(m_data.GetMap());
                     Graphics g = panel1.CreateGraphics();
-                    //set image to background of panel
-
-                    panel1.BackgroundImage = img;
-                    panel1.Size = img.Size;
+                    panel1.Image = img;
                 }
                 catch
                 {
