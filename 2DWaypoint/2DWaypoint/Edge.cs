@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace _2DWaypoint
 {
     [Serializable]
-    class Edge : IGraphic
+    public class Edge : IGraphic
     {
         public PointF Start { get; }
         public PointF End { get; }
@@ -16,7 +16,7 @@ namespace _2DWaypoint
         public PointF Length { get; }
         public string Name { get; }
         //define items to be serialized
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("name", Name, typeof(string));
             info.AddValue("Start.X", Start.X, typeof(float));
@@ -44,20 +44,6 @@ namespace _2DWaypoint
             Name = n;
             Length = VectorMath.Minus(Start, End);
         }
-        //draw line
-        public override void Draw(Graphics g)
-        {
-            if(Selected == true)
-            {
-                m_color = Color.Green;
-            }
-            else
-            {
-                m_color = Color.White;
-            }
-            Pen pen = new Pen(m_color, 2);
-            g.DrawLine(pen, Start, End);
-        }
         //constructor to add weight to waypoints.
         public Edge(List<WayPointButton> waypoints, ComboBox a, ComboBox b)
         {
@@ -75,7 +61,20 @@ namespace _2DWaypoint
                     Name += ", " + waypoints[i].Name;
                 }
             }
-
+        }
+        //draw line
+        public void Draw(Graphics g)
+        {
+            if (Selected == true)
+            {
+                m_color = Color.Green;
+            }
+            else
+            {
+                m_color = Color.White;
+            }
+            Pen pen = new Pen(m_color, 2);
+            g.DrawLine(pen, Start, End);
         }
 
 

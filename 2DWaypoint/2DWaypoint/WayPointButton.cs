@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace _2DWaypoint
 {
     [Serializable]
-     class WayPointButton : IGraphic
+     public class WayPointButton : IGraphic
     {
         public static float Radius = 5;
         public float size = 10;
@@ -17,7 +17,7 @@ namespace _2DWaypoint
         Color color = Color.Blue;
 
         //define items to be serialized
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("name", Name, typeof(string));
             info.AddValue("location.X", Location.X, typeof(float));
@@ -45,7 +45,7 @@ namespace _2DWaypoint
         {
         }
         //draw elilipse
-        public override void Draw(Graphics g)
+         public void Draw(Graphics g)
         {
             if(Selected == true)
             {
@@ -68,7 +68,6 @@ namespace _2DWaypoint
                 Data.comboBox--;
             }
         }
-
 
     }
 }

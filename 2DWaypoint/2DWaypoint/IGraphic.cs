@@ -8,13 +8,9 @@ using System.Threading.Tasks;
 
 namespace _2DWaypoint
 {//abstract class.
-    class IGraphic : ISerializable
+    public interface IGraphic : ISerializable
     {
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            
-        }
-
-        public virtual void Draw(Graphics g) { }
+   
+         void Draw(Graphics g);
     }
 }
